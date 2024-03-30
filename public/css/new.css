@@ -1,0 +1,56 @@
+/*for registration*/
+
+.show-password {
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
+  
+  #password-strength-bar {
+          width: 25%;
+          height: 5px;
+          background-color: #eee;
+          margin-top: 5px;
+          position: relative;
+      }
+  
+      #strength-fill {
+          height: 100%;
+          width: 0;
+          transition: width 0.3s ease-out;
+      }
+  
+      .weak {
+          background-color: #ff7f7f;
+      }
+  
+      .medium {
+          background-color: #ffbf7f;
+      }
+  
+      .strong {
+          background-color: #aaffaa;
+      }
+      
+      /*for generation descendant*/
+  
+  
+  .generation-tree {
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-start;
+      flex-wrap: wrap;
+  }
+  
+  .generation-node {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
+  }
+  
+  .generation-children {
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-start;
+      flex-wrap: wrap;
+  }
+  

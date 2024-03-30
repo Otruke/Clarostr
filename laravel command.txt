@@ -1,0 +1,143 @@
+1>> php artisan key:generate // to produce APP key. put APP key into the nneded place in the .env file
+
+2>> php artisan serve // to open php server and see link adrress http://127.0.0.1:8000
+
+//create a databasse in your mysql and connect your .env data to it
+
+3>> php artisan make:auth // to make login and registration
+
+// then go the file migrate under database, you will see the authentication stuff there. 
+// then run the command below.
+
+4>> php artisan migrate //if it shows error, do step 5 & 6 and redo step 4 to resolve the issue. 
+//remember to drop previous database made in step 4 before reattempt to migrate data again
+
+// now let do some hack. open AppserviceProvider under app and Provider, then in the public function boot(){
+//put
+5>> use Illuminate\Support\Facades\Schema; //then
+6>> Schema::defaultStringLength(191);
+
+6>> php artisan server // open in a seperate git bash console to run your server continuesly
+
+//To know who refer someone, we need to modify create_table file under migrate directory by inputing the code as shown below.
+$table->integer('referred_by')->nullable();
+//to know number of referals a user has brought
+$table->integer('no_of_refs')->nullable()->default('0');
+//to know the person level
+$table->integer('ref_level_id')->nullable();
+//to know if a user is an admin, etc
+$table->integer('role_id)->nullable();
+
+//now to make ref levels, we need to run the console script for creating roles table. i.e tables to know if someone is admin, moderator/staff or user e.t.c.
+php artisan make:migration create_rows_table
+
+//now to make ref levels table for ref_level_id, run the below code
+php artisam make:migration create_ref_levels_tables
+
+// now to make tables for refarral categories, i.e know no of ref that come from somewhere. e.g facebook, instsgram, etc.
+php artisam make:migration create_ref_categories_tables
+
+
+//////////////////////////////////////////////
+NOW WE GO TO THE MIGRATION DIRECTORY AND START ADDING CODE EACH TABLE.
+
+//FIRST for rows
+$table->string('name'); //Admin, moderator, user
+
+//Then referrals_level_table
+$table->string('name');
+
+//now add to the create_ref_categories_tables
+
+$table->string('name');
+$table->longText('description')->nullable();
+$table->string('reward')->nullable;
+$table->string('congratulatory_message')->nullable;
+$table->string('target_no_referrals')->nullable;
+$table->string('poinits_per_referral')->nullable; //used maybe you want to allocate point or dollars for usesr per referal they brought.
+
+//then run the command script that will add the table and stuff into our database as shown below
+php artisan migrate:refresh //refresh is their to avoid creating a another user and password table again. so it add. NB check for code 
+				//responsible to refresh in line with the laravel version you are using
+
+//Now we need a laravel generator to generate and do magic for us base on our table
+//So visit labs.infyom.com/laravelgenerator/docs/your laravel version/installation
+// On the sie, copy the codes that you will need to put in your compose.json file inside require objects. 9end
+
+compose update //runn that to update your composer.json file
+//you encounter any problem?11
+
+//then add other codes as highlighted on theh website and run a script to ubdate the web App folder.
+
+php artisan vendor:publish //then tap on 0 to select the all option
+
+//then just continue allinstructions in the installation page until you are done with it.
+
+/////////////////////
+/////////////////////
+
+then visit adminlte.io or click on the "PUBLISH LAYOUT COMMAND AT THE infyom installation page
+// to get a super cool admin template.
+
+//then go back to infyom and click on the GENERATE OPTIONS to start generating files/data from tables.
+
+
+
+
+/////////////////////////////////////
+/////////////////////////////////////
+////////////////////////////////////
+///////////////////////////////////
+
+composer require laravel/ui
+php artisan make:controller User/Auth/RegisterController
+
+
+
+
+Auth::user()->update([
+            'is_subscribed' => true,
+            'last_payment_date' => Carbon::now(),
+            // Update other payment-related details in the user record
+]);
+
+
+// Get the user's registered data
+        $user = Auth::user();
+
+        $firstName = $user->first_name;
+        $lastName = $user->last_name;
+///////////////////////////////////
+
+learn more on carbon 
+Carbon::now()
+
+
+
+developers@flutterwavego.com
+
+to input new column to database
+php artisan make:migration add_username_to_users_table --table=users
+
+//to run the seeder
+php artisan db:seed --class=BanksTableSeeder
+
+
+<?php
+        $createdAt = new DateTime(Auth::user()->created_at);
+        echo $createdAt->format('F d, Y. H:i:s');
+        ?>
+
+
+<!-- //code to debugg account bank returning null
+                                                $userBankName = auth()->user()->bank_name;
+                                                echo "User Bank Name: " . $userBankName; // Debug statement
+                                                $userBank = \App\Models\Bank::where('name', $userBankName)->first();
+                                                if ($userBank) {
+                                                    $userBankSortCode = $userBank->sort_code;
+                                                    echo "User Bank Sort Code: " . $userBankSortCode; // Debug statement
+                                                } else {
+                                                    echo "User bank not found in banks table"; // Debug statement
+                                                } -->
+
+

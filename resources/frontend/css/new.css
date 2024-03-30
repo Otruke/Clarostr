@@ -1,0 +1,34 @@
+.form-control.require {
+      
+}
+
+.show-password {
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+#password-strength-bar {
+        width: 25%;
+        height: 5px;
+        background-color: #eee;
+        margin-top: 5px;
+        position: relative;
+    }
+
+    #strength-fill {
+        height: 100%;
+        width: 0;
+        transition: width 0.3s ease-out;
+    }
+
+    .weak {
+        background-color: #ff7f7f;
+    }
+
+    .medium {
+        background-color: #ffbf7f;
+    }
+
+    .strong {
+        background-color: #aaffaa;
+    }
