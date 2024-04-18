@@ -16,6 +16,7 @@ class CreateWithdrawalHistoriesTable extends Migration
         Schema::create('withdrawal_histories', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
+            $table->string('transaction_id')->nullable();
             $table->decimal('starter_earnings', 10, 2)->default(0.00);
             $table->decimal('direct_referral_earnings', 10, 2)->default(0.00);
             $table->decimal('downliners_earnings', 10, 2)->default(0.00);
@@ -27,6 +28,7 @@ class CreateWithdrawalHistoriesTable extends Migration
             $table->softDeletes();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('transaction_id')->references('transaction_id')->on('user_transactions')->onDelete('cascade');
         });
     }
 

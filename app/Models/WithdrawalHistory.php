@@ -11,6 +11,7 @@ class WithdrawalHistory extends Model
 
     protected $fillable = [
         'user_id',
+        'transaction_id',
         'starter_earnings',
         'direct_referral_earnings',
         'downliners_earnings',

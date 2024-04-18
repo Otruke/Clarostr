@@ -71,4 +71,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/earnings', [App\Http\Controllers\HomeController::class, 'earnings'])->name('earnings');
     Route::get('/withdrawalHistory', [App\Http\Controllers\HomeController::class, 'withdrawalHistory'])->name('withdrawalHistory');
     Route::get('/historyReadMore', [App\Http\Controllers\HomeController::class, 'historyReadMore'])->name('historyReadMore');
+    Route::get('/withdrawal/{transaction_id}', [App\Http\Controllers\HomeController::class, 'showWithdrawalDetails'])->name('withdrawalDetails');
+
 });

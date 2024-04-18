@@ -52,10 +52,15 @@
                                 @forelse($withdrawals as $withdrawal)
                                 <tr class="background_white">
 
-                                    <td>{{ $withdrawal->create_at->date_format('F d, Y') }}</td>
+                                    <td> <?php
+                                        $created = new DateTime($withdrawal->created_at);
+                                        echo $created->format('F d, Y. H:i:s');
+                                    ?>
+                                    </td>
                                     <td>Successful</td>
                                     <td><span class="amount">{{ $withdrawal->amount}}</span></td>
-                                    <td><a href="my-earnings-detail.html"><button class="dashboard-btn">Read More</button></a></td>
+                                    <td><a href="{{ route('withdrawalDetails', $withdrawal->transaction_id) }}"><button class="dashboard-btn">Read More</button></a></td>
+
 
                                 </tr>
                                 @empty

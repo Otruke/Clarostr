@@ -23,7 +23,7 @@
                                         <div class="pay-now">
                                         <i class="fas fa-money-check"></i>
                                             </div>
-                                            <h3> Hi, Rufus</h3>
+                                            <h3> Hi, {{ Auth::user()->first_name}} 2222</h3>
                                             <p class="dashboard-note">Kindly click on the button below to withdraw your earnings.</p>
 
                                         </div>

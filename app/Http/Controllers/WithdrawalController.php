@@ -45,6 +45,7 @@ class WithdrawalController extends Controller
         // $withdrawalRequestInfo = $request->session()->get('withdrawalRequestData');
         dd($withdrawalRequestInfo);
 
+        $transaction_id = $withdrawalRequestInfo['reference'];
         $starter_earnings = $withdrawalRequestInfo['Starter_Pack'];
         $direct_referral_earnings = $withdrawalRequestInfo['Direct_Affiliate_Income'];
         $downliners_earnings = $withdrawalRequestInfo['Activation_Income_On_Downliners'];
@@ -52,6 +53,7 @@ class WithdrawalController extends Controller
         $monthly_earnings = $withdrawalRequestInfo['Monthly_Pack_Bonus'];
         $food_invest_earnings = $withdrawalRequestInfo['Food_Invest_Earnings'];
         $total_earnings = $withdrawalRequestInfo['Total'];
+        $description = $withdrawalRequestInfo['description'];
 
         function findData($data, $key)
         {
@@ -87,19 +89,20 @@ class WithdrawalController extends Controller
         //1. Populate the User transactions table
         UserTransaction::create([
         'user_id' => $myId,
-        'transaction_id' => $txRef,
-        'amount' => $Amount,
+        'transaction_id' => $transaction_id,
+        'amount' => $total_earnings,
         'name' => $user->username,
-        'email' => $customerEmail,
+        'email' => $user->email,
         'phone_number' => $user->phone_number,
-        'payment_mode' => $customerPaymentType,
+        'payment_mode' => 'Transfer',
         'description' => 'Withdrawal ' . $Description,
-        'type' => 'Dpst',
+        'type' => 'Wdrw',
         
         ]);
         //2. Populate the Withdrawal Histories table
         WithdrawalHistory::create([
           'user_id' => $myId,
+          'transaction_id' => $transaction_id,
           'starter_earnings' => $starter_earnings,
           'direct_referral_earnings' => $direct_referral_earnings,
           'downliners_earnings' => $downliners_earnings,

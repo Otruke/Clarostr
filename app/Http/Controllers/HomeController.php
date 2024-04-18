@@ -252,9 +252,22 @@ class HomeController extends Controller
             ->where('type', 'Wdrw')
             ->get();
 
+        //dd($withdrawals);
+
         $withdrawalsCount = $withdrawals->count();
 
         return view('home.withdrawalHistory', compact('withdrawals', 'withdrawalsCount'));
+    }
+
+    public function showWithdrawalDetails($transaction_id)
+    {
+        // Retrieve user transaction details
+        $transaction = UserTransaction::where('transaction_id', $transaction_id)->firstOrFail();
+
+        // Retrieve withdrawal history details based on the transaction ID
+        $withdrawalDetails = WithdrawalHistory::where('transaction_id', $transaction_id)->first();
+
+        return view('home.withdrawalDetails', compact('transaction', 'withdrawalDetails'));
     }
 
 }

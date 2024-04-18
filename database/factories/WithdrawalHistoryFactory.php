@@ -16,6 +16,7 @@ class WithdrawalHistoryFactory extends Factory
     {
         return [
             'user_id' => $this->faker->unique()->numberBetween(1, 100),
+            'transaction_id' => $this->faker->uuid(),
             'starter_earnings' => $this->faker->randomFloat(2, 0, 1000),
             'direct_referral_earnings' => $this->faker->randomFloat(2, 0, 1000),
             'downliners_earnings' => $this->faker->randomFloat(2, 0, 1000),

@@ -112,6 +112,12 @@
                                             @endforeach
                                             <input type="hidden" id="accountname" name="account_name" value="{{Auth::user()->bank_account_name}}" placeholder="Account Name" />
                                             
+                                            <!-- Generate unique reference number -->
+                                            @php
+                                                $uniqueReference = Auth::user()->username . '_' . now()->format('YmdHis') . '_' . Str::random(7);
+                                            @endphp
+                                            <input type="hidden" name="reference" value="{{ $uniqueReference }}" />
+
                                             <!-- Fetch user bank sort code -->
                                             @php
                                                 $userBankName = auth()->user()->bank_name;
@@ -128,7 +134,9 @@
                                             <input type="hidden" name="narration" value="{{Auth::user()->first_name}} Withdrawal" />
                                             <input type="hidden" name="description" value="Wdrw"  />
                                             <button type="submit"  class="dashboard-btn withdraw-btn">Withdraw Earnings</button>
-                                        
+
+                                            
+
                                         </form>
                                     </div>
 
@@ -149,5 +157,18 @@
 
         </div>
         <!-- Earning wrapper end -->
+
+        <!-- JavaScript to prevent default back button action -->
+        <script>
+            // Prevent default back button action
+            window.onload = function () {
+                if (window.history && window.history.pushState) {
+                    window.history.pushState('forward', null, '');
+                    window.onpopstate = function () {
+                        window.location.replace("{{ route('home') }}"); 
+                    };
+                }
+            }
+        </script>
 
 @endsection
