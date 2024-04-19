@@ -28,7 +28,7 @@ class CreateWithdrawalHistoriesTable extends Migration
             $table->softDeletes();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('transaction_id')->references('transaction_id')->on('user_transactions')->onDelete('cascade');
+           
         });
     }
 

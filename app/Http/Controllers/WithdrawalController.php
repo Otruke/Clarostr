@@ -20,7 +20,7 @@ class WithdrawalController extends Controller
         // Store form data in session
         $request->session()->put('withdrawalRequestData', $request->all());
         $withdrawalRequestInfo = $request->session()->get('withdrawalRequestData');
-        dd($withdrawalRequestInfo);
+        //dd($withdrawalRequestInfo);
         
          $arrdata = [
             'account_bank' => $request->bank_name,
@@ -35,7 +35,7 @@ class WithdrawalController extends Controller
       //This initializes payment and redirects to the payment gateway
       //The initialize method takes the parameter of the redirect URL
       $transfer = Flutterwave::initiateTransfer($arrdata);  
-      dd($transfer);
+      //dd($transfer);
       // Check if transfer initiation was successful
       if ($transfer['status'] === 'success') {
         // Update user's table
@@ -43,7 +43,7 @@ class WithdrawalController extends Controller
         $myId = $user->id;
 
         // $withdrawalRequestInfo = $request->session()->get('withdrawalRequestData');
-        dd($withdrawalRequestInfo);
+        //dd($withdrawalRequestInfo);
 
         $transaction_id = $withdrawalRequestInfo['reference'];
         $starter_earnings = $withdrawalRequestInfo['Starter_Pack'];
@@ -55,36 +55,36 @@ class WithdrawalController extends Controller
         $total_earnings = $withdrawalRequestInfo['Total'];
         $description = $withdrawalRequestInfo['description'];
 
-        function findData($data, $key)
-        {
-            if (isset($data[$key])) {
-                return $data[$key];
-            }
+        // function findData($data, $key)
+        // {
+        //     if (isset($data[$key])) {
+        //         return $data[$key];
+        //     }
         
-            foreach ($data as $value) {
-                if (is_array($value)) {
-                    $result = findData($value, $key);
-                    if ($result) {
-                        return $result;
-                    }
-                }
-            }
+        //     foreach ($data as $value) {
+        //         if (is_array($value)) {
+        //             $result = findData($value, $key);
+        //             if ($result) {
+        //                 return $result;
+        //             }
+        //         }
+        //     }
         
-            return null;
-        }
+        //     return null;
+        // }
 
-        $txRef = findData($data, 'txRef');
-        $customerEmail = findData($data, 'email');
-        $customerName = findData($data, 'fullName');
-        $chargeResponsecode = findData($data, 'responsecode');
-        $chargeCurrency = findData($data, 'currency');
-        $Amount = findData($data, 'amount');
-        $customerPaymentType = findData($data, 'paymentType');
-        $Description = findData($data, 'description');
-        if (empty($paymentDescription)) {
-            $paymentDescription = $Description2;
+        // $txRef = findData($data, 'txRef');
+        // $customerEmail = findData($data, 'email');
+        // $customerName = findData($data, 'fullName');
+        // $chargeResponsecode = findData($data, 'responsecode');
+        // $chargeCurrency = findData($data, 'currency');
+        // $Amount = findData($data, 'amount');
+        // $customerPaymentType = findData($data, 'paymentType');
+        // $Description = findData($data, 'description');
+        // if (empty($paymentDescription)) {
+        //     $paymentDescription = $Description2;
             
-        }
+        // }
 
         //1. Populate the User transactions table
         UserTransaction::create([
