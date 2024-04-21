@@ -68,6 +68,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/upgrade/{package}', [App\Http\Controllers\UpgradeController::class, 'upgrade'])->name('upgrade');
     Route::any('/withdraw', [WithdrawalController::class, 'withdrawal'])->name('withdraw');
     Route::any('/transfer', [WithdrawalController::class, 'initialize'])->name('transfer');
+    Route::any('/belowLimit', [WithdrawalController::class, 'belowLimit'])->name('belowLimit');
     Route::get('/earnings', [App\Http\Controllers\HomeController::class, 'earnings'])->name('earnings');
     Route::get('/withdrawalHistory', [App\Http\Controllers\HomeController::class, 'withdrawalHistory'])->name('withdrawalHistory');
     Route::get('/historyReadMore', [App\Http\Controllers\HomeController::class, 'historyReadMore'])->name('historyReadMore');

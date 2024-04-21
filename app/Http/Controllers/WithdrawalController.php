@@ -16,11 +16,15 @@ class WithdrawalController extends Controller
     public function withdrawal(){
         return view('home.withdraw');
     }
+    public function belowLimit(){
+      return view('home.belowLimit');
+    }
     public function initialize(Request $request) {
         // Store form data in session
         $request->session()->put('withdrawalRequestData', $request->all());
         $withdrawalRequestInfo = $request->session()->get('withdrawalRequestData');
         //dd($withdrawalRequestInfo);
+        $getAmount = $request->amount;
         
          $arrdata = [
             'account_bank' => $request->bank_name,
@@ -31,7 +35,9 @@ class WithdrawalController extends Controller
             'beneficiary_name' => $request->account_name,
             'seckey' => config('rave.secretKey'),
         ];
-        
+        if($getAmount >= 2500){
+          return view('home');
+        }else{
       //This initializes payment and redirects to the payment gateway
       //The initialize method takes the parameter of the redirect URL
       $transfer = Flutterwave::initiateTransfer($arrdata);  
@@ -114,12 +120,13 @@ class WithdrawalController extends Controller
           ]);
 
       //if ($transfer['status'] !== 'success') {
-          return view('home.membership');
+          return view('home');
       }
     else {
       // Notify the user that something went wrong
       return view('home.membership', ['message' => $transfer['message']]);
     }
+  }
   
   }
 }

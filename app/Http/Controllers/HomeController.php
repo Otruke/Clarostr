@@ -56,7 +56,7 @@ class HomeController extends Controller
     public function upline()
     {
         // Retrieve transactions for the currently authenticated user
-        $transaction = UserTransaction::where('user_id', auth()->user()->id)->first();
+    $transaction = UserTransaction::where('user_id', auth()->user()->id)->first();
 
         return view('home.upline', ['transaction' => $transaction , 'user' => auth()->user()]);
     }
