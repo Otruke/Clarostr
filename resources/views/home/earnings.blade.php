@@ -130,12 +130,14 @@
                                             <input name="email" type="hidden" value="{{Auth::user()->email}}" placeholder="email"/>
                                             <input name="account_number" type="hidden" value="{{Auth::user()->bank_account_number}}" placeholder="account Number"/>
                                             <input type="hidden" name="currency" value="NGN" />
-                                            <!-- <input name="amount" > -->
+                                            
                                             <input type="hidden" name="narration" value="{{Auth::user()->first_name}} Withdrawal" />
                                             <input type="hidden" name="description" value="Wdrw"  />
+                                            @if( Auth::user()->sub_status == 1 )
                                             <button type="submit"  class="dashboard-btn withdraw-btn">Withdraw Earnings</button>
-
-                                            
+                                            @else
+                                            <a href="#" style="padding: 5;"  class="dashboard-btn withdraw-btn">Activate To Withdraw</a>
+                                            @endif
 
                                         </form>
                                     </div>

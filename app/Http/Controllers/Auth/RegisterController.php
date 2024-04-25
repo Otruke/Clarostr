@@ -136,7 +136,7 @@ class RegisterController extends Controller
          ]);
 
         // Implement MLM logic
-        $this->handleMLM($user);
+        //$this->handleMLM($user);
 
         
 
