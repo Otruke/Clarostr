@@ -20,6 +20,14 @@ class WithdrawalController extends Controller
     public function belowLimit(){
       return view('home.belowLimit');
     }
+    public function successfulWithdrawal(){
+      $user = auth()->user();
+
+      $user = User::find(auth()->id());
+
+
+      return view('home.successfulWithdrawal', compact('user'));
+    }
     public function initialize(Request $request) {
       $user = auth()->user();
       $checkStatus = $user->sub_status;
@@ -98,7 +106,7 @@ class WithdrawalController extends Controller
                 ]);
 
             
-                return redirect('/home');
+                return redirect('/successfulWithdrawal');
             }
             else {
               // Notify the user that something went wrong

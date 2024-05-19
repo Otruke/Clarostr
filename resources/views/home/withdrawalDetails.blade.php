@@ -31,13 +31,12 @@
                                     <table id="earning-details-table"
                                         class="table cs-table crm_customer_table_inner_Wrapper mt-5">
                                         <tbody>
-                                            @foreach($withdrawalDetails as $detail)
                                             
                                             <tr class="background_white">
 
                                                 <td>Withdrawal Date</td>
                                                 <td><?php
-                                                        $created = new DateTime($detail->created_at);
+                                                        $created = new DateTime($withdrawalDetails->created_at);
                                                         echo $created->format('F d, Y. H:i:s');
                                                     ?>
                                                 </td>
@@ -45,42 +44,39 @@
                                             <tr class="background_white">
 
                                                 <td>Starter Pack</td>
-                                                <td><span class="amount">{{$detail->starter_earnings}}</span></td>
+                                                <td><span class="amount">{{$withdrawalDetails->starter_earnings}}</span></td>
                                             </tr>
                                             <tr class="background_white">
 
                                                 <td>Monthly Pack Bonus</td>
-                                                <td><span class="amount">{{$detail->monthly_earnings}}</span></td>
+                                                <td><span class="amount">{{$withdrawalDetails->monthly_earnings}}</span></td>
                                             </tr>
                                             
 
                                             <tr class="background_white">
 
                                                 <td>Direct Affiliate Income</td>
-                                                <td><span class="amount">{{$detail->direct_referral_earnings}}</span></td>
+                                                <td><span class="amount">{{$withdrawalDetails->direct_referral_earnings}}</span></td>
                                             </tr>
                                             <tr class="background_white">
 
                                                 <td>Earn For Life Income</td>
-                                                <td><span class="amount">{{$detail->descendants_monthly_earnings}}</span></td>
+                                                <td><span class="amount">{{$withdrawalDetails->descendants_monthly_earnings}}</span></td>
                                             </tr>
                                             <tr class="background_white">
 
                                                 <td>Activation Income On Downlines:</td>
-                                                <td><span class="amount">{{$detail->downliners_earnings}}</span></td>
+                                                <td><span class="amount">{{$withdrawalDetails->downliners_earnings}}</span></td>
                                             </tr>
                                             <tr class="background_white">
 
                                                 <td>Total:</td>
-                                                <td><span class="amount">{{$detail->total_earnings}}</span></td>
+                                                <td><span class="amount">{{$withdrawalDetails->total_earnings}}</span></td>
                                             </tr>
-                                           @endforeach
-
-
-
+                                            
                                         </tbody>
                                     </table>
-                                    <button class="earning-info-btn" onclick="javascript:history.back()"><i class="fa fa-arrow-left"></i> Back</button>
+                                    <button class="dashboard-btn" onclick="javascript:history.back()"><i class="fa fa-arrow-left"></i> Back</button>
 
                                 </div>
                             </div>

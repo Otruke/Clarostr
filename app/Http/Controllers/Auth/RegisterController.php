@@ -211,8 +211,8 @@ class RegisterController extends Controller
         $maxDirectDownlines = [
             'Starter' => 4,
             'Bronze' => 8,
-            'Silver' => 15,
-            'Gold' => 25,
+            'Silver' => 16,
+            'Gold' => 32,
             'Diamond' => PHP_INT_MAX, // Unlimited for Diamond
         ];
 

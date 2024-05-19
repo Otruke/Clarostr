@@ -191,9 +191,9 @@
                                             @elseif(Auth::user()->package == 'Bronze' )
                                             <td class="package-color1"> : <span class="total"></span>8</td>
                                             @elseif(Auth::user()->package == 'Silver' )
-                                            <td class="package-color1"> : <span class="total"></span>15</td>
+                                            <td class="package-color1"> : <span class="total"></span>16</td>
                                             @elseif(Auth::user()->package == 'Gold' )
-                                            <td class="package-color1"> : <span class="total"></span>25</td>
+                                            <td class="package-color1"> : <span class="total"></span>32</td>
                                             @else(Auth::user()->package == 'Diamond' )
                                             <td class="package-color1"> : <span class="total"></span>Unlimited</td>
                                             @endif
