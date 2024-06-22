@@ -35,8 +35,11 @@
                                             <tr class="background_white">
 
                                                 <td>Withdrawal Date</td>
-                                                <td><?php
+                                                <td>
+                                                    
+                                                    <?php
                                                         $created = new DateTime($withdrawalDetails->created_at);
+                                                        $created->setTimezone(new DateTimeZone('Africa/Lagos'));
                                                         echo $created->format('F d, Y. H:i:s');
                                                     ?>
                                                 </td>

@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Factories\Factory;
-
+use Illuminate\Support\Facades\DB;
 
 class RegisterController extends Controller
 {
@@ -92,10 +92,13 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\Models\User
      */
+
+
+    // This method is for the pre-launch that randomly place
+    // new user into sponsors since i will disable the sponsor input field
+
     protected function create(array $data)
     {
-        // Check if the sponsor field is empty, and set it to "first" if it is
-        $sponsor = empty($data['sponsor']) ? 'first' : $data['sponsor'];
         $user = User::create([
             'username' => $data['username'],
             'first_name' => $data['first_name'],
@@ -104,7 +107,7 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'phone_number' => $data['phone_number'],
             'gender' => $data['gender'],
-            'sponsor' => $sponsor, // Set sponsor to "first" if empty or null
+            'sponsor' => $data['sponsor'] ?? null, // Set sponsor to null if not provided
             'package' => $data['package'],
             'amount' => $data['amount'],
             'password' => Hash::make($data['password']),
@@ -133,49 +136,53 @@ class RegisterController extends Controller
             'monthly_earnings' => 0,
             'food_invest_earnings' => 0,
             'total_earnings' => 0,
-         ]);
+        ]);
 
         // Implement MLM logic
-        //$this->handleMLM($user);
+        $this->handleMLM($user);
 
-        
-
-    // // Create a transaction record for the user with default values of null or 0
-    // $user->transactions()->create([
-    //     'transaction_id' => null,
-    //     'amount' => 0,
-    //     'name' => null,
-    //     'email' => null,
-    //     'phone_number' => null,
-    //     'payment_mode' => null,
-    //     'description' => null,
-    //     'type' => null,
-    // ]);
         $user->calculateEarnings();
         return $user;
     }
 
-    
-
-
-   
-   protected function redirectTo()
+    protected function redirectTo()
     {
-        
         return route('regpayment');
     }
 
     protected function handleMLM(User $user)
     {
-        $sponsor = User::where('username', $user->sponsor)->first();
+        // If the sponsor is not provided or is invalid, find a random valid sponsor
+        if (empty($user->sponsor) || !$sponsor = User::where('username', $user->sponsor)->first()) {
+            // Get all users
+            $allUsers = User::all();
 
-        if ($sponsor) {
+            // Filter users who have not exceeded their direct downlines limit
+            $potentialSponsors = $allUsers->filter(function ($potentialSponsor) use ($user) {
+                $maxDirectDownlines = $this->getMaxDirectDownlines($potentialSponsor->package);
+                return $potentialSponsor->direct_downlines_count < $maxDirectDownlines && $potentialSponsor->id !== $user->id;
+            });
+
+            if ($potentialSponsors->isNotEmpty()) {
+                // Randomly select a sponsor from the potential sponsors
+                $sponsor = $potentialSponsors->random();
+            } else {
+                // Default to "first" if no valid sponsor found
+                $sponsor = User::where('username', 'first')->first();
+            }
+        }
+
+        if ($sponsor && $sponsor->id !== $user->id) {
             // Check if the user has reached the maximum allowed direct downlines based on the package
-            $maxDirectDownlines = $this->getMaxDirectDownlines($user->package);
+            $maxDirectDownlines = $this->getMaxDirectDownlines($sponsor->package);
 
             if ($sponsor->direct_downlines_count < $maxDirectDownlines) {
                 // Set the parent relationship for the current user using nested set methods
                 $user->appendToNode($sponsor)->save();
+
+                // Set the sponsor for the user
+                $user->sponsor = $sponsor->username;
+                $user->save();
 
                 // Increment direct downlines count for the sponsor
                 $sponsor->increment('direct_downlines_count');
@@ -187,9 +194,13 @@ class RegisterController extends Controller
                 // Sponsor has reached the limit, register overflow under "first"
                 $firstSponsor = User::where('username', 'first')->first();
 
-                if ($firstSponsor) {
+                if ($firstSponsor && $firstSponsor->id !== $user->id) {
                     // Set the parent relationship for the current user using nested set methods
                     $user->appendToNode($firstSponsor)->save();
+
+                    // Set the sponsor for the user
+                    $user->sponsor = $firstSponsor->username;
+                    $user->save();
 
                     // Increment direct downlines count for "first"
                     $firstSponsor->increment('direct_downlines_count');
@@ -197,11 +208,12 @@ class RegisterController extends Controller
                     // Calculate and set the level for "first"
                     $firstSponsor->level = $firstSponsor->getLevel();
                     $firstSponsor->save();
-                } 
-                // else {
-                //     // Handle the case where "first" does not exist (create "first" user, etc.)
-                // }
+                }
             }
+        } else {
+            // Handle the case where no valid sponsor is found or sponsor is the same as the user
+            // You can choose to throw an error, log this event, or handle it gracefully as needed
+            Log::error('No valid sponsor found or sponsor is the same as the user', ['user' => $user->username]);
         }
     }
 
@@ -216,77 +228,138 @@ class RegisterController extends Controller
             'Diamond' => PHP_INT_MAX, // Unlimited for Diamond
         ];
 
-        // Return the maximum allowed direct downlines based on the user's package
-        return $maxDirectDownlines[$package];
+        return $maxDirectDownlines[$package] ?? 0; // Return 0 if the package is not defined
     }
 
-    
+
 
 }
 
 
 
-// protected function handleMLM(User $user)
-    // {
-    //     $sponsor = User::where('username', $user->sponsor)->first();
+    // This Method below is the default method that create users details and 
+    // check if they didnt input sponsor name. If they did not input sponsor name,
+    // it register them under first or if they exceed their limit, it still register them under first
 
-    //     if ($sponsor) {
-    //         // Set the parent relationship for the current user using nested set methods
-    //         $user->appendToNode($sponsor)->save();
+//     protected function create(array $data)
+//     {
+//         // Check if the sponsor field is empty, and set it to "first" if it is
+//         $sponsor = empty($data['sponsor']) ? 'first' : $data['sponsor'];
+//         $user = User::create([
+//             'username' => $data['username'],
+//             'first_name' => $data['first_name'],
+//             'middle_name' => $data['middle_name'],
+//             'last_name' => $data['last_name'],
+//             'email' => $data['email'],
+//             'phone_number' => $data['phone_number'],
+//             'gender' => $data['gender'],
+//             'sponsor' => $sponsor, // Set sponsor to "first" if empty or null
+//             'package' => $data['package'],
+//             'amount' => $data['amount'],
+//             'password' => Hash::make($data['password']),
+//             'bank_name' => $data['bank_name'],
+//             'bank_account_name' => $data['bank_account_name'],
+//             'bank_account_number' => $data['bank_account_number'],
+//             'address' => $data['address'],
+//             'state' => $data['state'],
+//             'country' => $data['country'],
+//         ]);
 
-    //         // Increment direct downlines count for the sponsor
-    //         $sponsor->increment('direct_downlines_count');
+//         // Generate and save referral link
+//         $user->referral_link = route('referral.link', ['username' => $data['username']]);
 
-    //         // // Check for overflow referrals
-    //         // if ($sponsor->hasOverflowReferrals()) {
-    //         //     // Distribute overflow referrals uniformly
-    //         //     $this->distributeOverflowReferrals($sponsor);
-    //         // }
+//         // Initialize earned_downliner_ids and monthly_earned_downliner_ids as empty arrays
+//         $user->earned_downliner_ids = [];
+//         $user->monthly_earned_downliner_ids = [];
+//         $user->save();
 
-    //         // Calculate and set the level for the sponsor
-    //         $sponsor->level = $sponsor->getLevel();
-    //         $sponsor->save();
-    //     }
-    // }
+//         // Create an earning record for the user
+//         $user->earnings()->create([
+//             'starter_earnings' => 0,
+//             'direct_referral_earnings' => 0,
+//             'downliners_earnings' => 0,
+//             'descendants_monthly_earnings' => 0,
+//             'monthly_earnings' => 0,
+//             'food_invest_earnings' => 0,
+//             'total_earnings' => 0,
+//          ]);
 
-    // protected function distributeOverflowReferrals(User $sponsor)
-    // {
-    //     // Check if the user has completed four direct downlines
-    //     if ($sponsor->direct_downlines_count >= 4 && !$sponsor->overflow_distribution_complete) {
-    //         // Get all the descendants (generation downlines) of the user
-    //         $descendants = $sponsor->allDescendants;
+//         // Implement MLM logic
+//         //$this->handleMLM($user);
 
-    //         // Calculate the number of descendants who have not completed four direct downlines
-    //         $eligibleDescendants = $descendants->filter(function ($descendant) {
-    //             return $descendant->direct_downlines_count < 4;
-    //         });
+        
+//         $user->calculateEarnings();
+//         return $user;
+//     }
 
-    //         // Get the number of overflow referrals to distribute
-    //         $overflowReferralsCount = $sponsor->direct_downlines_count - 4;
+    
 
-    //         // Retrieve the overflow referrals for the user
-    //         $overflowReferrals = factory(User::class, $overflowReferralsCount)->make();
-    //         ////////////////////////////////////////////////////////
 
-    //         // Loop through eligible descendants and distribute overflow referrals
-    //         foreach ($eligibleDescendants as $descendant) {
-    //             // Determine the number of overflow referrals to assign to the current descendant
-    //             $overflowToAssign = min(1, $overflowReferralsCount);
+   
+//    protected function redirectTo()
+//     {
+        
+//         return route('regpayment');
+//     }
 
-    //             // Assign the overflow referrals to the descendant
-    //             $descendant->appendToNode($sponsor)->save();
+//     protected function handleMLM(User $user)
+//     {
+//         $sponsor = User::where('username', $user->sponsor)->first();
 
-    //             // Increment the direct downlines count for the descendant
-    //             $descendant->increment('direct_downlines_count', $overflowToAssign);
+//         if ($sponsor) {
+//             // Check if the user has reached the maximum allowed direct downlines based on the package
+//             $maxDirectDownlines = $this->getMaxDirectDownlines($user->package);
 
-    //             // Update the overflow referrals count
-    //             $overflowReferralsCount -= $overflowToAssign;
-    //         }
+//             if ($sponsor->direct_downlines_count < $maxDirectDownlines) {
+//                 // Set the parent relationship for the current user using nested set methods
+//                 $user->appendToNode($sponsor)->save();
 
-    //         // Mark overflow distribution as complete
-    //         $sponsor->update(['overflow_distribution_complete' => true]);
-    //     }
-    // }
+//                 // Increment direct downlines count for the sponsor
+//                 $sponsor->increment('direct_downlines_count');
+
+//                 // Calculate and set the level for the sponsor
+//                 $sponsor->level = $sponsor->getLevel();
+//                 $sponsor->save();
+//             } else {
+//                 // Sponsor has reached the limit, register overflow under "first"
+//                 $firstSponsor = User::where('username', 'first')->first();
+
+//                 if ($firstSponsor) {
+//                     // Set the parent relationship for the current user using nested set methods
+//                     $user->appendToNode($firstSponsor)->save();
+
+//                     // Increment direct downlines count for "first"
+//                     $firstSponsor->increment('direct_downlines_count');
+
+//                     // Calculate and set the level for "first"
+//                     $firstSponsor->level = $firstSponsor->getLevel();
+//                     $firstSponsor->save();
+//                 } 
+//                 // else {
+//                 //     // Handle the case where "first" does not exist (create "first" user, etc.)
+//                 // }
+//             }
+//         }
+//     }
+
+//     protected function getMaxDirectDownlines($package)
+//     {
+//         // Define the maximum allowed direct downlines for each package
+//         $maxDirectDownlines = [
+//             'Starter' => 4,
+//             'Bronze' => 8,
+//             'Silver' => 16,
+//             'Gold' => 32,
+//             'Diamond' => PHP_INT_MAX, // Unlimited for Diamond
+//         ];
+
+//         // Return the maximum allowed direct downlines based on the user's package
+//         return $maxDirectDownlines[$package];
+//     }
+
+    
+
+// }
 
 
 

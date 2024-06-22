@@ -49,7 +49,7 @@
                                     <div class="col-lg-4 col-md-4 col-sm-12">
                                         <div class="form-group icon_form comments_form register_contact">
                                             <label for="sponsor" class="field-label">Referral Username</label>
-                                            <input id="sponsor" type="text" class="form-control @error('sponsor') is-invalid @enderror" name="sponsor" Value="{{ request()->query('sponsor') }}" placeholder="clarostream">
+                                            <input id="sponsor" type="text" class="form-control @error('sponsor') is-invalid @enderror" name="sponsor" Value="{{ request()->query('sponsor') }}" placeholder="Pre-Launch" disabled>
                                             <span id="sponsor-message" class="form-text text-muted" style="color: #ff0f0f;"></span>
                                             @error('sponsor')
                                                 <span class="invalid-feedback" role="alert">
