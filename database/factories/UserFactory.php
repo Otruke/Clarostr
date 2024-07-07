@@ -44,6 +44,7 @@ class UserFactory extends Factory
             'unsubscribed_days' => Str::random(10),
             'is_subscribed' => $this->faker->boolean(80), // 80% chance of being true (successful payment)
             'sub_status' => $this->faker->boolean(80),
+            'three_month_sub' => $this->faker->boolean(80),
             'next_billing' => now()->addMonth(),
             'earned_downliner_ids' => [],
             'monthly_earned_downliner_ids' => [],

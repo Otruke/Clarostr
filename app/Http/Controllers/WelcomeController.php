@@ -12,4 +12,11 @@ class WelcomeController extends Controller
         return view('welcome', ['referralUsername' => $referralUsername]);
         
     }
+
+    public function preLaunch(Request $request)
+    {
+        $referralUsername = $request->session()->get('referralUsername');
+        return view('pre-launch', ['referralUsername' => $referralUsername]);
+        
+    }
 }

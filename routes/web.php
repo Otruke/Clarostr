@@ -28,7 +28,8 @@ use App\Http\Controllers\WithdrawalController;
 //     return view('welcome');
 // });
 
-Route::get('/', [App\Http\Controllers\WelcomeController::class, 'index'])->name('welcome');
+Route::get('/welcome', [App\Http\Controllers\WelcomeController::class, 'index'])->name('welcome');
+Route::get('/', [App\Http\Controllers\WelcomeController::class, 'preLaunch'])->name('pre-launch');
 
 Route::get('/regpayment', [App\Http\Controllers\RegpaymentController::class, 'index'])->name('regpayment');
 Route::get('/subPayment', [App\Http\Controllers\SubpaymentController::class, 'index'])->name('subPayment');
@@ -53,6 +54,7 @@ Route::get('/error', [App\Http\Controllers\ErrorController::class, 'index'])->na
 Route::get('/regErrorPayment', [App\Http\Controllers\RegErrorPaymentConroller::class, 'index'])->name('regErrorPayment');
 
 Route::middleware(['auth'])->group(function () {
+    Route::get('/pre-reg-success', [App\Http\Controllers\RegpaymentController::class, 'preReg'])->name('preRegSuccessful');
     Route::get('/showdirect/{username}', [App\Http\Controllers\ReferralController::class, 'showReferrals'])->name('showdirect');
     Route::get('/downliners/{username}', [App\Http\Controllers\ReferralController::class, 'showDownliners'])->name('downliners');
     Route::get('/generation-tree/{username}', [App\Http\Controllers\ReferralController::class, 'showGenerationTree'])->name('generationTree');

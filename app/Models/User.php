@@ -47,6 +47,7 @@ class User extends Authenticatable
             'country',
             'is_subscribed',
             'sub_status',
+            'three_month_sub',
             'last_payment_date',
             'next_billing',
             'overflow_distributed',

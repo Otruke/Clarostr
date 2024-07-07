@@ -79,29 +79,20 @@
     <!-- Top Scroll End -->
     <!-- cp navi wrapper Start -->
     <nav class="cd-dropdown index3_cd_dropdown d-block d-sm-block d-md-block d-lg-none d-xl-none">
-        <h2><a href="{{ route('welcome') }}#affiliate-packages"> Welcome </a></h2>
+        <h2><a href="{{ route('pre-launch') }}#affiliate-packages"> Welcome </a></h2>
         <a href="#0" class="cd-close">Close</a>
         <ul class="cd-dropdown-content">
-            <li><a href="{{ route('welcome') }}">Home</a></li>   
-            <li><a href="{{ route('welcome') }}#affiliate-packages">Compensation Plan</a></li>
+            <li><a href="{{ route('pre-launch') }}">Home</a></li>   
+            <li><a href="{{ route('pre-launch') }}#affiliate-packages">Compensation Plan</a></li>
             <li><a href="#">Invest</a></li>
             <!-- Auth code replacement start here -->
             <li>
-            @if (Route::has('login'))
-                    @auth
-                        <a href="{{ url('/home') }}">Dashboard</a>
-                    @else
-                        @if (Route::has('register'))
-                            <a href="{{ route('welcome') }}#affiliate-packages">Register</a>
-                        @endif
+          
+                            <a href="{{ route('pre-launch') }}#affiliate-packages">Register</a>
+                        
 
             </li>
-            <li>
-                        
-                         <a href="{{ route('login') }}">Member Login</a>
-                    @endauth
-                @endif
-            </li>
+            
             <!-- Auth code replacement ends here -->
         </ul>
         <!-- .cd-dropdown-content -->
@@ -109,7 +100,7 @@
     <div class="cp_navi_main_wrapper index2_header_wrapper index3_header_wrapper float_left">
         <div class="container-fluid">
             <div class="cp_logo_wrapper">
-                <a href="{{ route('welcome') }}#affiliate-packages">
+                <a href="{{ route('pre-launch') }}#affiliate-packages">
                     <img class="main-logo" src="images/logo.png" alt="Clarostream Logo">
                 </a>
             </div>
@@ -153,21 +144,12 @@
                 <div class="header_btn index3_header_btn">
                     <ul>
                     <li>
-                        @if (Route::has('login'))
-                                @auth
-                                    <a href="{{ url('/home') }}">Dashboard</a>
-                                @else
-                                    @if (Route::has('register'))
-                                        <a href="{{ route('welcome') }}#affiliate-packages">Register</a>
-                                    @endif
+                       
+                                        <a href="{{ route('pre-launch') }}#affiliate-packages">Register</a>
+                            
             
                         </li>
-                        <li>
-                                    
-                                     <a href="{{ route('login') }}">Member Login</a>
-                                @endauth
-                            @endif
-                        </li>
+                        
                     </ul>
                 </div>
             </div>
@@ -177,8 +159,8 @@
             <div class="cp_navigation_wrapper">
                 <div class="mainmenu d-xl-block d-lg-block d-md-none d-sm-none d-none">
                     <ul class="main_nav_ul">
-                        <li class="has-mega gc_main_navigation"><a href="{{ route('welcome') }}" class="gc_main_navigation active_class">Home</a></li>   
-                        <li><a href="{{ route('welcome') }}#affiliate-packages" class="gc_main_navigation">Compensation Plan</a></li>
+                        <li class="has-mega gc_main_navigation"><a href="{{ route('pre-launch') }}" class="gc_main_navigation active_class">Home</a></li>   
+                        <li><a href="{{ route('pre-launch') }}#affiliate-packages" class="gc_main_navigation">Compensation Plan</a></li>
                         <li class="has-mega gc_main_navigation"><a href="#" class="gc_main_navigation">Invest</a></li>
                     </ul>
                 </div>
@@ -206,7 +188,7 @@
                 <div class="col-lg-4 col-md-4 col-12 col-sm-12">
                     <div class="wrapper_second_about">
                         <div class="wrapper_first_image">
-                            <a href="{{ route('welcome') }}#affiliate-packages"><img id="footer-logo" src="images/footer-logo.png" class="img-responsive" alt="logo" /></a>
+                            <a href="{{ route('pre-launch') }}#affiliate-packages"><img id="footer-logo" src="images/footer-logo.png" class="img-responsive" alt="logo" /></a>
                         </div>
                         <p> Clarostream Network is your gateway to prosperity, and we have various offers you can't resist! </p>
                     </div>

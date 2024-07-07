@@ -74,7 +74,10 @@ class RegisterController extends Controller
             'gender' => ['required', 'string', Rule::in(['male', 'female'])],
             'sponsor' => ['nullable', 'string', 'max:50', 'exists:users,username'],
             'package' => ['required', 'string', Rule::in(['Starter', 'Bronze', 'Silver', 'Gold', 'Diamond'])],
-            'amount' => ['required', 'integer', Rule::in(['12500', '25000', '50000', '75000', '100000'])],
+            'amount' => ['required', 'integer'],
+            
+            //the amount below is for the real amount after pre-launch.
+            // 'amount' => ['required', 'integer', Rule::in(['12500', '25000', '50000', '75000', '100000'])],
             'password' => ['required', 'string', 'min:8', 'regex:/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]+$/', 'confirmed'],
             'bank_name' => ['required', 'string', 'max:200'],
             'bank_account_name' => ['required', 'string', 'max:200'],
@@ -145,10 +148,18 @@ class RegisterController extends Controller
         return $user;
     }
 
+    //HERE IS JUST FOR PRE-LAUNCH REDIRECT TO
     protected function redirectTo()
     {
-        return route('regpayment');
+        return route('preRegSuccessful');
     }
+
+    //THIS IS THE REAL REDIRECT TO FOR NORMS
+
+    // protected function redirectTo()
+    // {
+    //     return route('regpayment');
+    // }
 
     protected function handleMLM(User $user)
     {

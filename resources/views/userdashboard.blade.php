@@ -327,6 +327,36 @@
     </div>
     <!--  footer  wrapper end -->
     <!-- main box wrapper End-->
+
+    <!-- REMOVE AFTER PRE-LAUNCH begining of pre-launch logout home -->
+    <form action="{{ route('logout') }}" method="POST" id="logout-form" class="d-none">
+        @csrf
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Perform the logout via AJAX
+            fetch('{{ route('logout') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            }).then(response => {
+                if (response.ok) {
+                    // Redirect to the landing page after logout
+                    window.location.href = '{{ route('preRegSuccessful') }}';
+                } else {
+                    console.error('Logout failed');
+                }
+            }).catch(error => {
+                console.error('Logout error:', error);
+            });
+        });
+    </script>
+
+<!-- End of pre-launch do not see Home/dashboard script -->
+
     <!--custom js files-->
     <script src="{{ asset('')}}js/new.js"></script>
     <script src="{{ asset('')}}js/jquery-3.3.1.min.js"></script>

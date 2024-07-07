@@ -1,0 +1,7 @@
+return random sponsor back to first,
+return amount in register amout back to rules for valid amount
+return default link from pre-launch to welcome
+return reg redirect to paynow fromm pre-lauch success message
+return the master.blade.php file from realfileadjustedforprelaunch
+remove the script auto logout script from userdashboard.blade.php
+

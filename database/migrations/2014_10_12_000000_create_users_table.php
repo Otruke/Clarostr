@@ -40,7 +40,8 @@ class CreateUsersTable extends Migration
             $table->string('bank_account_number');
             $table->string('address');
             $table->string('state');
-            $table->string('country'); 
+            $table->string('country');
+            $table->boolean('three_month_sub')->default(false);
             $table->timestamp('last_payment_date')->useCurrent(Carbon::now());
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

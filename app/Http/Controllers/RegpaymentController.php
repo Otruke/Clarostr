@@ -8,8 +8,14 @@ class RegpaymentController extends Controller
 {
     public function index()
     {
-    $user = User::find(auth()->id()); 
-    return view('regpayment', compact('user'));
+        $user = User::find(auth()->id()); 
+        return view('regpayment', compact('user'));
         
+    }
+
+    public function preReg()
+    {
+        $user = User::find(auth()->id()); 
+        return view('preRegSuccessful', compact('user')); 
     }
 }

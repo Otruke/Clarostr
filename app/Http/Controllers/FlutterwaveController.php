@@ -136,30 +136,42 @@ class FlutterwaveController extends Controller
                 ]);
 
                 // 2. Populate the User transactions table
-                UserTransaction::create([
-                'user_id' => $myId,
-                'transaction_id' => $txRef,
-                'amount' => $chargeAmount,
-                'name' => $user->username,
-                'email' => $customerEmail,
-                'phone_number' => $user->phone_number,
-                'payment_mode' => $customerPaymentType,
-                'description' => 'Upgrade to ' . $paymentDescription,
-                'type' => 'Dpst',
-                
-                ]);
 
-                // Additional logic if needed
+                
+                // Create the user transaction with the additional three_month_sub field
+                UserTransaction::create([
+                    'user_id' => $myId,
+                    'transaction_id' => $txRef,
+                    'amount' => $chargeAmount,
+                    'name' => $user->username,
+                    'email' => $customerEmail,
+                    'phone_number' => $user->phone_number,
+                    'payment_mode' => $customerPaymentType,
+                    'description' => 'Upgrade to ' . $paymentDescription,
+                    'type' => 'Dpst',
+                    
+                ]);
             } else {
+
+                // Define the amounts that qualify for a three-month subscription
+                $threeMonthAmounts = [29250, 40500, 63000, 85000, 108000];
+
+                // Check if the charge amount qualifies for a three-month subscription
+                $threeMonthSub = in_array($chargeAmount, $threeMonthAmounts) ? 1 : 0;
+
+
                 $user->update([
                 'is_subscribed' => true,
                 'unsubscribed_days' => 0,
                 'last_payment_date' => Carbon::now(),
                 'next_billing' => now()->addMonth(),
                 'sub_status' => true,
+                'three_month_sub' => $threeMonthSub,
+
                 ]);
 
                 // 2. Populate the User transactions table
+        
                 UserTransaction::create([
                 'user_id' => $myId,
                 'transaction_id' => $txRef,
@@ -170,6 +182,7 @@ class FlutterwaveController extends Controller
                 'payment_mode' => $customerPaymentType,
                 'description' => 'Payment for ' . $paymentDescription,
                 'type' => 'Dpst',
+                
                 
                 ]);
             }
